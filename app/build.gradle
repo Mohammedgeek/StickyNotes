@@ -4,6 +4,14 @@ apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: "io.fabric"
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/home/geek/Desktop/StickyNotes/KeyStore.jks')
+            storePassword 'ka4amangii'
+            keyAlias = 'key0'
+            keyPassword 'ka4amangii'
+        }
+    }
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -13,6 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {

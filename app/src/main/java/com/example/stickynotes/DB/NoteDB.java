@@ -12,19 +12,6 @@ public abstract class NoteDB extends RoomDatabase {
 
     private static NoteDB noteDB;
 
-//    public static NoteDB getInstance(Context context) {
-//        if (null == noteDB) {
-//            noteDB = buildDatabaseInstance(context);
-//        }
-//        return noteDB;
-//    }
-
-//    private static NoteDB buildDatabaseInstance(Context context) {
-//        return Room.databaseBuilder(context,
-//                NoteDB.class,
-//               "noteDB")
-//                .allowMainThreadQueries().build();
-//    }
 
     private static volatile NoteDB INSTANCE;
     private static final String DATABASE_NAME = "note_DB";

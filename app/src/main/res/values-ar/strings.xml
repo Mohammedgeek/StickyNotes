@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sticky Notes</string>
+    <string name="btn_save">حفظ</string>
+    <string name="empty">فارغ</string>
+    <string name="hint_desc">الموضوع</string>
+    <string name="hint_title">العنوان</string>
+    <string name="item">عنصر</string>
+    <string name="title_activity_add_note">اضافة مذكرة</string>
+    <string name="txt_add">اضافة</string>
+    <string name="action_settings">الاعدادات</string>
+</resources>
