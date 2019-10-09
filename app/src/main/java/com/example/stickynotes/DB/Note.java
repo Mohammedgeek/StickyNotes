@@ -23,16 +23,13 @@ public class Note {
         this.content = content;
         this.title = title;
 
-        //   this.date = new Date(System.currentTimeMillis());
+
     }
 
     @Ignore
     public Note() {
     }
 
-    public void setNote_id(long note_id) {
-        this.setID(note_id);
-    }
 
     public String getContent() {
         return content;

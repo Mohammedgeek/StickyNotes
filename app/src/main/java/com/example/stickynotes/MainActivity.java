@@ -128,24 +128,6 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
     }
 
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 100 && resultCode > 0) {
-//            if (resultCode == 1) {
-//                notes.add((Note) data.getSerializableExtra("note"));
-//            } else if (resultCode == 2) {
-//                notes.set(pos, (Note) data.getSerializableExtra("note"));
-//            }
-//            listVisibility();
-//        }
-//    }
-
-
-//    new DeleteNote(MainActivity .this, notes.get(pos));
-//    notes.remove(pos);
-//    listVisibility();
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
