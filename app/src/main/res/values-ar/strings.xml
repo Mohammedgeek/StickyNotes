@@ -9,4 +9,10 @@
     <string name="title_activity_add_note">اضافة مذكرة</string>
     <string name="txt_add">اضافة</string>
     <string name="action_settings">الاعدادات</string>
+    <string name="no_note">لا يوجد مذكرات حاليه .. اضف بعض المذكرات!</string>
+    <string name="delete_all">مسح الكل</string>
+    <string name="delete">مسح</string>
+    <string name="note_background_image">خلفيه المذكرات</string>
+    <string name="update_note_title">تحديث المذكره</string>
+    <string name="update">تحديث</string>
 </resources>

@@ -4,5 +4,5 @@
     <item
         android:id="@+id/action_delete_note"
         app:showAsAction="ifRoom"
-        android:title="Delete" />
+        android:title="@string/delete" />
 </menu>

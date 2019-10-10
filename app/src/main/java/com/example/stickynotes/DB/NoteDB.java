@@ -29,8 +29,4 @@ public abstract class NoteDB extends RoomDatabase {
         return INSTANCE;
     }
 
-    public void cleanUp() {
-        noteDB = null;
-    }
-
 }

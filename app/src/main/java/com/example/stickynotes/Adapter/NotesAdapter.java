@@ -17,18 +17,23 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.BeanHolder> {
 
 
-    private List<Note> list;
+    private List<Note> mList;
     private Context context;
     private LayoutInflater layoutInflater;
     private OnNoteItemClick onNoteItemClick;
 
     public NotesAdapter(List<Note> list, Context context) {
         layoutInflater = LayoutInflater.from(context);
-        this.list = list;
+        this.mList = list;
         this.context = context;
         this.onNoteItemClick = (OnNoteItemClick) context;
     }
 
+    public void submitList(List<Note> list) {
+        mList.clear();
+        mList = list;
+
+    }
 
     @Override
     public BeanHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,14 +43,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.BeanHolder> 
 
     @Override
     public void onBindViewHolder(BeanHolder holder, int position) {
-        Log.e("bind", "onBindViewHolder: " + list.get(position));
-        holder.textViewTitle.setText(list.get(position).getTitle());
-        holder.textViewContent.setText(list.get(position).getContent());
+        Log.e("bind", "onBindViewHolder: " + mList.get(position));
+        holder.textViewTitle.setText(mList.get(position).getTitle());
+        holder.textViewContent.setText(mList.get(position).getContent());
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return mList.size();
     }
 
     public interface OnNoteItemClick {

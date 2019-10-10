@@ -25,7 +25,7 @@ public class ScheduledJobService extends JobService {
             protected Object doInBackground(Object[] objects) {
                 Context context = ScheduledJobService.this;
                 NoteDB db = NoteDB.getInstance(context);
-                noteEntities = db.getNoteDao().getAll();
+                noteEntities = db.getNoteDao().getAllAsync();
                 NotesRemoteViewsService.updateWidget(context, noteEntities);
                 return null;
             }

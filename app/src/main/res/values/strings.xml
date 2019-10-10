@@ -8,6 +8,15 @@
     <string name="txt_add">No Notes Found, Let\'s Add Some!</string>
     <string name="empty">Empty</string>
     <string name="item">ITEM</string>
+    <string name="no_note">No Notes Found, Let\'s Add Some!</string>
+    <string name="delete_all">Delete All</string>
+    <string name="delete">Delete</string>
+    <string name="note_background_image">Note background image</string>
+    <string name="preferance" translatable="false">pref</string>
+    <string name="note_key" translatable="false">noteKey</string>
+    <string name="note_parcel" translatable="false">note</string>
+    <string name="update_note_title">Update Note</string>
+    <string name="update">Update</string>
 
 
 </resources>

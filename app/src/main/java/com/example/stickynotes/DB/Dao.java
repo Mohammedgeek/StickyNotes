@@ -1,5 +1,6 @@
 package com.example.stickynotes.DB;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -11,7 +12,10 @@ import java.util.List;
 @androidx.room.Dao
 public interface Dao {
     @Query("SELECT * FROM notes")
-    List<Note> getAll();
+    LiveData<List<Note>> getAll();
+
+    @Query("SELECT * FROM notes")
+    List<Note> getAllAsync();
 
     @Insert
     void insert(Note note);

@@ -1,7 +1,6 @@
 package com.example.stickynotes;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +22,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.parceler.Parcels;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +29,11 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
     private TextView textViewMsg;
     private RecyclerView recyclerView;
     private NoteDB noteDatabase;
-    private List<Note> notes;
     private NotesAdapter notesAdapter;
     private int pos;
+    private MainViewModel mMainViewModel;
+    private List<Note> mAllNotes = new ArrayList<>();
+
     private FirebaseAnalytics mFirebaseAnalytics;
 
 
@@ -40,73 +42,31 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        initializeVies();
-        displayList();
-        Reminder.scheduleUpdateWidgetReminder(this);
-    }
-
-    private void displayList() {
         noteDatabase = NoteDB.getInstance(MainActivity.this);
-        new RetrieveTask(this).execute();
+        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mMainViewModel.getAllTasks().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                if (notes.isEmpty()) {
+                    mAllNotes = new ArrayList<>();
+                    textViewMsg.setVisibility(View.VISIBLE);
+                    notesAdapter.submitList(notes);
+                    notesAdapter.notifyDataSetChanged();
+                } else {
+                    mAllNotes = notes;
+                    textViewMsg.setVisibility(View.GONE);
+                    notesAdapter.submitList(notes);
+                    notesAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        initializeVies();
+        Reminder.scheduleUpdateWidgetReminder(this);
     }
 
     @Override
     protected void onResume() {
-        displayList();
         super.onResume();
-    }
-
-    private static class RetrieveTask extends AsyncTask<Void, Void, List<Note>> {
-
-        private WeakReference<MainActivity> activityReference;
-
-        // only retain a weak reference to the activity
-        RetrieveTask(MainActivity context) {
-            activityReference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected List<Note> doInBackground(Void... voids) {
-            if (activityReference.get() != null)
-                return activityReference.get().noteDatabase.getNoteDao().getAll();
-            else
-                return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<Note> notes) {
-            if (notes != null && notes.size() > 0) {
-                activityReference.get().notes.clear();
-                activityReference.get().notes.addAll(notes);
-                // hides empty text view
-                activityReference.get().textViewMsg.setVisibility(View.GONE);
-                activityReference.get().notesAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-    private static class DeleteAllNotes extends AsyncTask<Void, Void, Void> {
-
-        private WeakReference<MainActivity> activityReference;
-
-        // only retain a weak reference to the activity
-        DeleteAllNotes(MainActivity context) {
-            activityReference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            activityReference.get().noteDatabase.getNoteDao().deleteAll();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            activityReference.get().notes.clear();
-            activityReference.get().notesAdapter.notifyDataSetChanged();
-            activityReference.get().textViewMsg.setVisibility(View.VISIBLE);
-            super.onPostExecute(aVoid);
-        }
     }
 
     private void initializeVies() {
@@ -122,11 +82,9 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
         });
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        notes = new ArrayList<>();
-        notesAdapter = new NotesAdapter(notes, MainActivity.this);
+        notesAdapter = new NotesAdapter(mAllNotes, MainActivity.this);
         recyclerView.setAdapter(notesAdapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete_all) {
-            new DeleteAllNotes(MainActivity.this).execute();
+            mMainViewModel.deleteAllTasks();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,23 +104,9 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.OnNo
     @Override
     public void onNoteClick(final int pos) {
         MainActivity.this.pos = pos;
-        startActivity(new Intent(MainActivity.this, AddNoteActivity.class).putExtra("note", Parcels.wrap(notes.get(pos))));
+        startActivity(new Intent(MainActivity.this, AddNoteActivity.class).putExtra(getString(R.string.note_parcel), Parcels.wrap(mAllNotes.get(pos))));
     }
 
-    private void listVisibility() {
-        int emptyMsgVisibility = View.GONE;
-        if (notes.size() == 0) { // no item to display
-            if (textViewMsg.getVisibility() == View.GONE)
-                emptyMsgVisibility = View.VISIBLE;
-        }
-        textViewMsg.setVisibility(emptyMsgVisibility);
-        notesAdapter.notifyDataSetChanged();
-    }
 
-    @Override
-    protected void onDestroy() {
-        noteDatabase.cleanUp();
-        super.onDestroy();
-    }
 }
 
